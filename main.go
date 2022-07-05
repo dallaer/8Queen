@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math"
 	"os"
+	"strconv"
 	"time"
 )
 
@@ -17,9 +18,15 @@ func createMatrix(n int) [][]int {
 }
 
 func printInFile(m [][]int) {
-	s, _ := os.OpenFile("file.txt", os.O_APPEND, 0666)
+	s, err := os.OpenFile("file.txt", os.O_APPEND, 0666)
+	if err != nil {
+		fmt.Println("Unexpected error while open file")
+	}
 	for i := 0; i < len(m); i++ {
-		data, _ := json.Marshal(m[i])
+		data, err1 := json.Marshal(m[i])
+		if err1 != nil {
+			fmt.Println("Unexpected error")
+		}
 		s.Write(data)
 		s.WriteString("\n")
 	}
@@ -68,17 +75,24 @@ func W8() {
 }
 
 func main() {
-	var n int
+	var n string
 	for true {
 		fmt.Println("Enter number")
-		os.Create("file.txt")
+		_, err := os.Create("file.txt")
+		if err != nil {
+			fmt.Println("Unexpected error while creating file")
+		}
 		fmt.Scan(&n)
-		if n > 0 {
+		if n == "quit" {
+			break
+		}
+		x, _ := strconv.Atoi(n)
+		if x > 0 {
 			go W8()
-			fmt.Println("For ", n, " Queen ", get_que(n, 1, 0, [][]int{}), " difference combination\nYou can check it in the file")
+			fmt.Println("For ", x, " Queen ", get_que(x, 1, 0, [][]int{}), " difference combination\nYou can check it in the file")
 			break
 		} else {
-			fmt.Println("Incorrect input. Try again.")
+			fmt.Println("Incorrect input. Try again. Enter quit for break.")
 		}
 	}
 }
