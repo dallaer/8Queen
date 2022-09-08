@@ -86,16 +86,16 @@ var n string
 func main() {
 	for true {
 		fmt.Println("Enter number")
-		_, err := os.Create("file.txt") // create a file in which matrices with solutions will be written
-		if err != nil {
-			fmt.Println("Unexpected error while creating file")
-		}
 		fmt.Scan(&n)
 		if n == "quit" {
 			break
 		}
 		x, _ := strconv.Atoi(n) //convert received string to int
 		if x > 0 {
+			_, err := os.Create("file.txt") // create a file in which matrices with solutions will be written
+			if err != nil {
+				fmt.Println("Unexpected error while creating file")
+			}
 			go W8()
 			fmt.Println("For ", x, " Queen ", get_que(x, 1, 0, [][]int{}), " difference combination\nYou can check it in the file") // print the number of solutions and run the algorithm
 			break
